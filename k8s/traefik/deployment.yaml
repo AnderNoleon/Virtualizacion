@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: traefik
+  namespace: traefik
+  labels:
+    app: traefik
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: traefik
+  template:
+    metadata:
+      labels:
+        app: traefik
+    spec:
+      serviceAccountName: traefik
+      containers:
+      - name: traefik
+        image: traefik:v3.5
+        args:
+        - --entryPoints.web.address=:80
+        - --providers.kubernetesingress=true
+        - --providers.kubernetescrd=true
+        - --api.dashboard=true
+        - --api.insecure=true
+        - --log.level=INFO
+        ports:
+        - name: web
+          containerPort: 80
+        - name: dashboard
+          containerPort: 8080
