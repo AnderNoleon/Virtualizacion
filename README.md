@@ -89,12 +89,16 @@ En `/etc/hosts`:
 
 Acceso: `http://argocd.midominio.local` con el usuario `admin`.
 
+![Argo CD por dominio](screenshots/Captura4.png)
+
 ## 3. Conexión con el repositorio
 
 - **Repositorio público:** no requiere configuración; Argo CD clona la URL indicada en cada Application.
 - **Repositorio privado:** copiar `repo-secret.example.yaml` a `repo-secret.yaml`, colocar un Personal Access Token de GitHub con permiso de lectura y aplicarlo con `kubectl apply -f argocd/repo-secret.yaml`. El archivo con el token está en `.gitignore` y no se sube al repositorio.
 
 La conexión se verifica en **Settings → Repositories**, donde el repositorio debe aparecer con estado *Successful*.
+
+![Repositorio conectado](screenshots/Captura5.png)
 
 ## 4. Creación de las Applications
 
@@ -119,6 +123,12 @@ Con la sincronización automática, Argo CD aplica los manifiestos sin intervenc
 ## 5. Sincronización de un cambio
 
 1. Estado inicial: las 4 Applications en **Synced** y **Healthy** (captura *antes*).
+
+   ![Applications antes del cambio](screenshots/Captura4.png)
+
+   Detalle de una Application (app2) sincronizada, con sus recursos (Service, Deployment, IngressRoute y Pod):
+
+   ![Detalle app2](screenshots/Captura3.png)
 2. Cambio en el repositorio: se modificó `replicas` de `1` a `3` en el Deployment de la aplicación 1.
    ```bash
    git commit -am "feat(app1): aumentar réplicas de 1 a 3"
@@ -131,12 +141,17 @@ Con la sincronización automática, Argo CD aplica los manifiestos sin intervenc
    ```
    El Deployment muestra `3/3`, y en la interfaz la Application vuelve a **Synced** y **Healthy** con el nuevo commit (captura *después*).
 
+   ![kubectl con 3/3](screenshots/Captura7.png)
+
+   ![app1 después del cambio con 3 pods](screenshots/Captura6.png)
+
 ## Evidencias
 
 | Evidencia | Archivo |
 |---|---|
-| Argo CD desde el navegador por dominio | `screenshots/argocd-login.png` |
-| Repositorio conectado | `screenshots/argocd-repo.png` |
-| Applications Synced/Healthy antes del cambio | `screenshots/apps-antes.png` |
-| Applications Synced/Healthy después del cambio | `screenshots/apps-despues.png` |
-| Detalle con 3 réplicas | `screenshots/app1-replicas.png` |
+| Argo CD desde el navegador por dominio | `screenshots/Captura4.png` |
+| Repositorio conectado | `screenshots/Captura5.png` |
+| Applications Synced/Healthy antes del cambio | `screenshots/Captura4.png` |
+| Detalle de una Application sincronizada (app2) | `screenshots/Captura3.png` |
+| app1 Synced/Healthy con el nuevo commit y 3 réplicas | `screenshots/Captura6.png` |
+| `kubectl get deploy` con nginx en `3/3` | `screenshots/Captura7.png` |
