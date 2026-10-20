@@ -1,0 +1,33 @@
+# Chart: grafana/grafana
+adminUser: admin
+adminPassword: admin123
+persistence:
+  enabled: false
+grafana.ini:
+  server:
+    root_url: http://grafana.anderson.lab
+
+# Provisioning de data sources (como código)
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        uid: prometheus
+        access: proxy
+        url: http://prometheus-server.monitoring-aonhl.svc.cluster.local
+        isDefault: true
+      - name: Loki
+        type: loki
+        uid: loki
+        access: proxy
+        url: http://loki.monitoring-aonhl.svc.cluster.local:3100
+
+# Provisioning de dashboards: el sidecar carga los ConfigMaps con la etiqueta grafana_dashboard=1
+sidecar:
+  dashboards:
+    enabled: true
+    label: grafana_dashboard
+    labelValue: "1"
+    folder: /tmp/dashboards
