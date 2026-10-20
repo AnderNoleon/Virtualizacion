@@ -1,0 +1,21 @@
+# Chart: argo/argo-cd  (https://argoproj.github.io/argo-helm)
+global:
+  domain: argocd.midominio.local
+
+configs:
+  params:
+    # Traefik recibe el tráfico por HTTP (entrypoint web), así que argocd-server
+    # sirve sin TLS para evitar redirecciones infinitas.
+    server.insecure: true
+  cm:
+    # Revisar el repositorio cada 60s (por defecto son 180s)
+    timeout.reconciliation: 60s
+
+server:
+  ingress:
+    enabled: false        # se expone con IngressRoute de Traefik (traefik/ingressroute-argocd.yaml)
+
+dex:
+  enabled: false          # no se usa SSO, solo el usuario admin
+notifications:
+  enabled: false

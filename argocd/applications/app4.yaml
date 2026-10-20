@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: parcial-aonhl-app4
+  namespace: argocd-aonhl
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/AnderNoleon/Virtualizacion.git
+    targetRevision: assessment-06
+    path: apps/whoami            # whoami
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: parcial-aonhl
+  syncPolicy:
+    automated:
+      prune: true               # elimina del clúster lo que se borre del repo
+      selfHeal: true            # revierte cambios manuales hechos en el clúster
+    syncOptions:
+      - CreateNamespace=true
